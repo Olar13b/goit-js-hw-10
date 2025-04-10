@@ -4,33 +4,67 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Form</title>
+    <title>Snackbar</title>
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
+
   <body>
+    <div class="wrap">
+      <load src="./partials/back-link.html" />
+     <header class="header">
+  <div class="container">
+    <nav class="nav">
+      </a>
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a class="nav-link" href="./1-timer.html">Timer</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="./2-snackbar.html">Snackbar</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+    </div>
     <main>
       <div class="container">
-        <a class="back-link" href="./index.html">Go back</a>
-        <h1 class="main-title">Form</h1>
+        <form class="form js-form">
+          <label class="input-label">
+            Delay (ms)
+            <input class="delay-input" type="number" name="delay" required />
+          </label>
 
-        <form class="form feedback-form" autocomplete="off">
-          <label class="input-label">
-            Email
-            <input class="input-field" type="email" name="email" autofocus />
-          </label>
-          <label class="input-label">
-            Message
-            <textarea
-              class="input-field textarea"
-              name="message"
-              rows="8"
-            ></textarea>
-          </label>
-          <button class="form-btn" type="submit">Submit</button>
+          <fieldset class="fieldset">
+            <legend>State</legend>
+            <label class="state-label">
+              <input
+                class="state-input visually-hidden"
+                type="radio"
+                name="state"
+                value="fulfilled"
+                required
+              />
+              <span class="custom-state-input"></span>
+              Fulfilled
+            </label>
+            <label class="state-label">
+              <input
+                class="state-input visually-hidden"
+                type="radio"
+                name="state"
+                value="rejected"
+                required
+              />
+              <span class="custom-state-input"></span>
+              Rejected
+            </label>
+          </fieldset>
+
+          <button class="create-btn" type="submit">Create notification</button>
         </form>
       </div>
     </main>
-
-    <script type="module" src="./js/2-form.js"></script>
+    <script type="module" src="./js/2-snackbar.js"></script>
   </body>
 </html>
