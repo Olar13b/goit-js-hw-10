@@ -1,40 +1,72 @@
-const form = document.querySelector('.feedback-form');
-const STORAGE_KEY = 'feedback-form-state';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import iconOk from '../img/svg/ok.svg';
+import iconError from '../img/svg/error.svg';
 
-const formData = {
-    email: '',
-    message: '',
+const formEl = document.querySelector('.js-form');
+
+const promise = {
+  createPromise: ({ delay, state }) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (state === 'fulfilled') {
+          resolve(delay);
+        } else {
+          reject(delay);
+        }
+      }, delay);
+    });
+  },
+
+  fulfilled: value =>
+    iziToast.show({
+      iconUrl: iconOk,
+      title: 'OK',
+      message: `Fulfilled promise in ${value}ms`,
+      position: 'topRight',
+      backgroundColor: '#59a10d',
+      theme: 'dark',
+    }),
+
+  rejected: value =>
+    iziToast.show({
+      iconUrl: iconError,
+      title: 'Error',
+      message: `Rejected promise in ${value}ms`,
+      position: 'topRight',
+      backgroundColor: '#ef4040',
+      theme: 'dark',
+    }),
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-    const savedData = localStorage.getItem(STORAGE_KEY);
-    if (savedData) {
-        const parsedData = JSON.parse(savedData);
-        formData.email = parsedData.email || '';
-        formData.message = parsedData.message || '';
+const onFormSubmit = event => {
+  event.preventDefault();
 
-        form.elements.email.value = formData.email;
-        form.elements.message.value = formData.message;
-    }
-});
+  const {
+    delay: { value: delayInput },
+    state: { value: state },
+  } = formEl.elements;
 
-form.addEventListener('input', (event) => {
-    formData[event.target.name] = event.target.value.trim();
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
-});
+  const delay = Number(delayInput.trim());
 
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
+  if (isNaN(delay) || delay < 0) {
+    iziToast.show({
+      iconUrl: iconError,
+      title: 'Error',
+      message: 'Please enter a valid non-negative number for delay.',
+      position: 'topRight',
+      backgroundColor: '#ef4040',
+      theme: 'dark',
+    });
+    return;
+  }
 
-    if (!formData.email || !formData.message) {
-        alert('Fill please all fields');
-        return;
-    }
+  promise
+    .createPromise({ delay, state })
+    .then(promise.fulfilled)
+    .catch(promise.rejected);
 
-    console.log('Submitted data:', formData);
+  formEl.reset();
+};
 
-    localStorage.removeItem(STORAGE_KEY);
-    form.reset();
-    formData.email = '';
-    formData.message = '';
-});
+formEl.addEventListener('submit', onFormSubmit);
